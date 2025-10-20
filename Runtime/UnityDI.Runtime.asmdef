@@ -1,0 +1,10 @@
+
+{
+  "name": "UnityDI.Runtime",
+  "rootNamespace": "UnityDI",
+  "autoReferenced": true,
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false
+}

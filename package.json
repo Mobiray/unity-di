@@ -1,0 +1,13 @@
+{
+  "name": "com.mobiray.unity_di",
+  "displayName": "UnityDI",
+  "version": "1.0.0",
+  "unity": "6000.2",
+  "description": "A tiny dependency injection framework for Unity by Mobiray.",
+  "author": {
+    "name": "Mobiray",
+    "url": "https://github.com/mobiray"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}
