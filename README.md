@@ -1,13 +1,43 @@
-# UnityDI
+# UnityDI - Minimal Dependency Injection Framework
 
-A tiny dependency injection framework for Unity by **Mobiray**.  
-Simple, no reflection trees, no code generation — just clean, minimal bindings.
+A lightweight DI framework for Unity that supports singleton services with constructor and method injection.
 
----
+## Installation
 
-## 🚀 Installation
-
-Add this line to your `Packages/manifest.json`:
+1. Add to your `Packages/manifest.json`:
 
 ```json
-"com.mobiray.unity_di": "https://gitlab.com/mobiray/unity-di.git#v*.*.*"
+{
+  "dependencies": {
+    "com.mobiray.unity_di": "https://github.com/mobiray/unity-di.git"
+  }
+}
+```
+
+2. Create subclass of GameInstaller and register dependencies
+```csharp
+public class MyInstaller : GameInstaller
+{
+    protected override void RegisterDependencies(Container container)
+    {
+        container.Register<ISomeService, SomeService>();
+        container.RegisterSingleton<GameManager>();
+    }
+}
+```
+
+3. Add this Installer to the first Scene
+
+4. Use [Inject] annotation
+```csharp
+public class Player : MonoBehaviour
+{
+    private ISomeService _service;
+    
+    [Inject]
+    public void Construct(ISomeService service)
+    {
+        _service = service;
+    }
+}
+```
