@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Mobiray.DI
 {
@@ -14,25 +15,30 @@ namespace Mobiray.DI
             if (_isInitialized)
             {
                 Destroy(gameObject);
-                _isInitialized = false;
                 return;
             }
 
             Initialize();
         }
 
+        protected virtual void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        protected virtual void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
         private void Initialize()
         {
-            if (_isInitialized)
-                UnityDI.Clear();
-
             if (_dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
 
             _isInitialized = true;
 
             RegisterDependencies();
-            InjectAll();
         }
 
         /// <summary>
@@ -46,6 +52,15 @@ namespace Mobiray.DI
         private void InjectAll()
         {
             UnityDI.InjectAllInScene();
+        }
+
+        /// <summary>
+        /// Вызывается при загрузке новой сцены
+        /// </summary>
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            Debug.Log($"[GameInstaller] New scene loaded: {scene.name}, injecting dependencies...");
+            InjectAll();
         }
 
         /// <summary>
@@ -70,6 +85,27 @@ namespace Mobiray.DI
         protected void RegisterInstance<TInterface>(TInterface instance)
         {
             UnityDI.RegisterInstance(instance);
+        }
+
+        /// <summary>
+        /// Ручной инжект конкретной сцены
+        /// </summary>
+        public void InjectScene(Scene scene)
+        {
+            UnityDI.InjectScene(scene);
+        }
+
+        /// <summary>
+        /// Ручной инжект конкретного GameObject
+        /// </summary>
+        public void InjectGameObject(GameObject gameObject)
+        {
+            UnityDI.InjectGameObject(gameObject);
+        }
+
+        public void InjectCurrentScene()
+        {
+            InjectAll();
         }
     }
 }
