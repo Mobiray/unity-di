@@ -3,17 +3,36 @@ using UnityEngine.SceneManagement;
 
 namespace Mobiray.DI
 {
-    public static class UnityDI
+    internal static class UnityDI
     {
-        // ... предыдущие методы ...
+        private static DIContainer _container;
+        internal static DIContainer Container => _container ??= new DIContainer();
 
-        public static void InjectAllInScene()
+        internal static void Register<TInterface, TImplementation>() where TImplementation : TInterface
+            => Container.Register<TInterface, TImplementation>();
+
+        internal static void Register<TImplementation>()
+            => Container.Register<TImplementation>();
+
+        internal static void RegisterInstance<TInterface>(TInterface instance)
+            => Container.RegisterInstance(instance);
+
+        internal static T Resolve<T>()
+            => Container.Resolve<T>();
+
+        internal static bool Inject(object target)
+            => Container.Inject(target);
+
+        internal static void Clear()
+            => Container.Clear();
+
+        internal static void InjectAllInScene()
         {
             var scene = SceneManager.GetActiveScene();
             InjectScene(scene);
         }
 
-        public static void InjectScene(Scene scene)
+        internal static void InjectScene(Scene scene)
         {
             var rootObjects = scene.GetRootGameObjects();
             
@@ -25,14 +44,14 @@ namespace Mobiray.DI
             Debug.Log($"[UnityDI] Injected {rootObjects.Length} root objects in scene: {scene.name}");
         }
 
-        public static void InjectGameObject(GameObject gameObject)
+        internal static void InjectGameObject(GameObject gameObject)
         {
             var behaviours = gameObject.GetComponentsInChildren<MonoBehaviour>(true);
             var injectedCount = 0;
             
             foreach (var behaviour in behaviours)
             {
-                if (behaviour != null && Instance.Inject(behaviour))
+                if (behaviour != null && Inject(behaviour))
                     injectedCount++;
             }
 

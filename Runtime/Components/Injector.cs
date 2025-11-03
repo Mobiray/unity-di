@@ -8,15 +8,12 @@ namespace Mobiray.DI
 {
     public class Injector : MonoBehaviour
     {
-        [SerializeField] private bool _injectOnAwake = true;
-        
         private void Awake()
         {
-            if (_injectOnAwake)
-                InjectGameObject();
+            InjectGameObject();
         }
 
-        public void InjectGameObject()
+        private void InjectGameObject()
         {
             var behaviours = GetComponentsInChildren<MonoBehaviour>(true);
             

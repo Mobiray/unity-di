@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace Mobiray.DI
 {
-    public class DIContainer
+    internal class DIContainer
     {
         private static DIContainer _instance;
         public static DIContainer Instance => _instance ??= new DIContainer();
