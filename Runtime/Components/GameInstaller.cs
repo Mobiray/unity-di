@@ -36,18 +36,18 @@ namespace Mobiray.DI
             if (_dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
 
-            _isInitialized = true;
-
             RegisterDependencies();
+
+            _isInitialized = true;
         }
 
         /// <summary>
-        /// Переопредели этот метод для регистрации зависимостей
+        /// Override this method to register dependencies
         /// </summary>
         protected abstract void RegisterDependencies();
 
         /// <summary>
-        /// Инжект всех объектов на сцене
+        /// Inject all objects in the current scene
         /// </summary>
         private void InjectAll()
         {
@@ -55,7 +55,7 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Вызывается при загрузке новой сцены
+        /// Called when a new scene is loaded
         /// </summary>
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
@@ -64,7 +64,7 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Регистрация синглтона с интерфейсом
+        /// Register a singleton with an interface
         /// </summary>
         protected void Register<TInterface, TImplementation>() where TImplementation : TInterface
         {
@@ -72,7 +72,7 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Регистрация синглтона без интерфейса
+        /// Register a singleton without an interface
         /// </summary>
         protected void RegisterSingleton<TImplementation>()
         {
@@ -80,7 +80,7 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Регистрация готового инстанса
+        /// Register a pre-created instance
         /// </summary>
         protected void RegisterInstance<TInterface>(TInterface instance)
         {
@@ -88,7 +88,7 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Ручной инжект конкретной сцены
+        /// Manual injection for a specific scene
         /// </summary>
         public void InjectScene(Scene scene)
         {
@@ -96,13 +96,16 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Ручной инжект конкретного GameObject
+        /// Manual injection for a specific GameObject
         /// </summary>
         public void InjectGameObject(GameObject gameObject)
         {
             UnityDI.InjectGameObject(gameObject);
         }
 
+        /// <summary>
+        /// Manual injection for the current scene
+        /// </summary>
         public void InjectCurrentScene()
         {
             InjectAll();

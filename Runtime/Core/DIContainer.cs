@@ -8,32 +8,32 @@ namespace Mobiray.DI
     internal class DIContainer
     {
         private static DIContainer _instance;
-        public static DIContainer Instance => _instance ??= new DIContainer();
+        internal static DIContainer Instance => _instance ??= new DIContainer();
 
-        private readonly Dictionary<Type, object> _singletons = new();
-        private readonly Dictionary<Type, Type> _registrations = new();
+        internal readonly Dictionary<Type, object> _singletons = new();
+        internal readonly Dictionary<Type, Type> _registrations = new();
 
-        public void Register<TInterface, TImplementation>() where TImplementation : TInterface
+        internal void Register<TInterface, TImplementation>() where TImplementation : TInterface
         {
             _registrations[typeof(TInterface)] = typeof(TImplementation);
         }
 
-        public void Register<TImplementation>()
+        internal void Register<TImplementation>()
         {
             _registrations[typeof(TImplementation)] = typeof(TImplementation);
         }
 
-        public void RegisterInstance<TInterface>(TInterface instance)
+        internal void RegisterInstance<TInterface>(TInterface instance)
         {
             _singletons[typeof(TInterface)] = instance;
         }
 
-        public T Resolve<T>()
+        internal T Resolve<T>()
         {
             return (T)Resolve(typeof(T));
         }
 
-        public object Resolve(Type type)
+        internal object Resolve(Type type)
         {
             // Если уже есть инстанс - возвращаем его
             if (_singletons.TryGetValue(type, out var instance))
@@ -74,7 +74,7 @@ namespace Mobiray.DI
             }
         }
 
-        public bool Inject(object target)
+        internal bool Inject(object target)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace Mobiray.DI
             }
         }
 
-        public void Clear()
+        internal void Clear()
         {
             _singletons.Clear();
             _registrations.Clear();
