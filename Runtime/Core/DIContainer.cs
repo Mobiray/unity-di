@@ -73,28 +73,6 @@ namespace Mobiray.DI
             }
         }
 
-        public void Inject(object target)
-        {
-            var type = target.GetType();
-            
-            // Ищем методы с [Inject]
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            
-            foreach (var method in methods)
-            {
-                if (method.GetCustomAttribute<InjectAttribute>() == null) 
-                    continue;
-
-                var parameters = method.GetParameters();
-                var args = new object[parameters.Length];
-                
-                for (int i = 0; i < parameters.Length; i++)
-                    args[i] = Resolve(parameters[i].ParameterType);
-
-                method.Invoke(target, args);
-            }
-        }
-
         public bool Inject(object target)
         {
             try
@@ -128,7 +106,7 @@ namespace Mobiray.DI
                 return false;
             }
         }
-        
+
         public void Clear()
         {
             _singletons.Clear();
