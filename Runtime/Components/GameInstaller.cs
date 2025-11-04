@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Mobiray.DI
 {
+    [DefaultExecutionOrder(-999)]
     public abstract class GameInstaller : MonoBehaviour
     {
         [Header("Installer Settings")] [SerializeField]
@@ -49,7 +50,7 @@ namespace Mobiray.DI
         /// <summary>
         /// Inject all objects in the current scene
         /// </summary>
-        private void InjectAll()
+        internal void InjectAll()
         {
             UnityDI.InjectAllInScene();
         }
