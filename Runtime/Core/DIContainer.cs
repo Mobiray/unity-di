@@ -15,16 +15,35 @@ namespace Mobiray.DI
 
         internal void Register<TInterface, TImplementation>() where TImplementation : TInterface
         {
+            if (_registrations.ContainsKey(typeof(TInterface)))
+            {
+                Debug.LogError($"[DI] Type {typeof(TInterface)} already registered");
+                return;
+            }
+
             _registrations[typeof(TInterface)] = typeof(TImplementation);
         }
 
         internal void Register<TImplementation>()
         {
+            if (_registrations.ContainsKey(typeof(TImplementation)))
+            {
+                Debug.LogError($"[DI] Type {typeof(TImplementation)} already registered");
+                return;
+            }
+
             _registrations[typeof(TImplementation)] = typeof(TImplementation);
         }
 
+
         internal void RegisterInstance<TInterface>(TInterface instance)
         {
+            if (_singletons.ContainsKey(typeof(TInterface)))
+            {
+                Debug.LogError($"[DI] Type {typeof(TInterface)} already registered");
+                return;
+            }
+
             _singletons[typeof(TInterface)] = instance;
         }
 
@@ -46,7 +65,7 @@ namespace Mobiray.DI
             // Создаем инстанс с инжекцией зависимостей
             instance = CreateInstance(implementationType);
             _singletons[type] = instance;
-            
+
             return instance;
         }
 
@@ -61,7 +80,7 @@ namespace Mobiray.DI
                 // Инжект через конструктор
                 var parameters = injectConstructor.GetParameters();
                 var args = new object[parameters.Length];
-                
+
                 for (int i = 0; i < parameters.Length; i++)
                     args[i] = Resolve(parameters[i].ParameterType);
 
@@ -79,19 +98,19 @@ namespace Mobiray.DI
             try
             {
                 var type = target.GetType();
-        
+
                 // Ищем методы с [Inject]
                 var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 var injected = false;
-        
+
                 foreach (var method in methods)
                 {
-                    if (method.GetCustomAttribute<InjectAttribute>() == null) 
+                    if (method.GetCustomAttribute<InjectAttribute>() == null)
                         continue;
 
                     var parameters = method.GetParameters();
                     var args = new object[parameters.Length];
-            
+
                     for (int i = 0; i < parameters.Length; i++)
                         args[i] = Resolve(parameters[i].ParameterType);
 

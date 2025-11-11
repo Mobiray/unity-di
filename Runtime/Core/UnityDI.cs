@@ -41,7 +41,7 @@ namespace Mobiray.DI
                 InjectGameObject(rootObject);
             }
 
-          //  Debug.Log($"[UnityDI] Injected {rootObjects.Length} root objects in scene: {scene.name}");
+            Debug.Log($"[DI] Injected {rootObjects.Length} root objects in scene: {scene.name}");
         }
 
         internal static void InjectGameObject(GameObject gameObject)
@@ -55,7 +55,7 @@ namespace Mobiray.DI
                     injectedCount++;
             }
 
-         //   Debug.Log($"[UnityDI] Injected {injectedCount} behaviours in: {gameObject.name}");
+            Debug.Log($"[DI] Injected {injectedCount} behaviours in: {gameObject.name}");
         }
     }
 }
