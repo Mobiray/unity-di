@@ -26,9 +26,9 @@ public class MyInstaller : GameInstaller
 }
 ```
 
-3. Add this Installer to the first Scene
+3. Add this Installer to every scene where you want these dependencies to be injected.
 
-4. Use [Inject] annotation
+4. Use [Inject] annotation for injecting to method or constructor:
 ```csharp
 public class Player : MonoBehaviour
 {
