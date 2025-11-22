@@ -8,6 +8,8 @@ namespace Mobiray.DI
         private static DIContainer _container;
         internal static DIContainer Container => _container ??= new DIContainer();
 
+        internal static void SetDebugLogs(bool showLogs) => Container.ShowDebugLogs = showLogs;
+
         internal static void Register<TInterface, TImplementation>() where TImplementation : TInterface
             => Container.Register<TInterface, TImplementation>();
 
@@ -41,7 +43,7 @@ namespace Mobiray.DI
                 InjectGameObject(rootObject);
             }
 
-            Debug.Log($"[DI] Injected {rootObjects.Length} root objects in scene: {scene.name}");
+            if (Container.ShowDebugLogs) Debug.Log($"[DI] Injected {rootObjects.Length} root objects in scene: {scene.name}");
         }
 
         internal static void InjectGameObject(GameObject gameObject)
@@ -55,7 +57,7 @@ namespace Mobiray.DI
                     injectedCount++;
             }
 
-            Debug.Log($"[DI] Injected {injectedCount} behaviours in: {gameObject.name}");
+            if (Container.ShowDebugLogs) Debug.Log($"[DI] Injected {injectedCount} behaviours in: {gameObject.name}");
         }
     }
 }

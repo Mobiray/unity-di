@@ -9,6 +9,8 @@ namespace Mobiray.DI
         [Header("Installer Settings")] [SerializeField]
         protected bool _dontDestroyOnLoad = true;
 
+        [SerializeField] private bool _showDebugLogs = true;
+
         private static bool _isInitialized;
 
         protected virtual void Awake()
@@ -37,6 +39,7 @@ namespace Mobiray.DI
             if (_dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
 
+            UnityDI.SetDebugLogs(_showDebugLogs);
             RegisterDependencies();
 
             _isInitialized = true;
@@ -60,7 +63,7 @@ namespace Mobiray.DI
         /// </summary>
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            Debug.Log($"[GameInstaller] New scene loaded: {scene.name}, injecting dependencies...");
+            if(_showDebugLogs) Debug.Log($"[GameInstaller] New scene loaded: {scene.name}, injecting dependencies...");
             InjectAll();
         }
 

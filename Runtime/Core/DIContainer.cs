@@ -10,6 +10,8 @@ namespace Mobiray.DI
         private static DIContainer _instance;
         internal static DIContainer Instance => _instance ??= new DIContainer();
 
+        internal bool ShowDebugLogs { get; set; } = true;
+
         internal readonly Dictionary<Type, object> _singletons = new();
         internal readonly Dictionary<Type, Type> _registrations = new();
 
@@ -17,7 +19,7 @@ namespace Mobiray.DI
         {
             if (_registrations.ContainsKey(typeof(TInterface)))
             {
-                Debug.LogError($"[DI] Type {typeof(TInterface)} already registered");
+                if (ShowDebugLogs) Debug.LogError($"[DI] Type {typeof(TInterface)} already registered");
                 return;
             }
 
@@ -28,7 +30,7 @@ namespace Mobiray.DI
         {
             if (_registrations.ContainsKey(typeof(TImplementation)))
             {
-                Debug.LogError($"[DI] Type {typeof(TImplementation)} already registered");
+                if (ShowDebugLogs) Debug.LogError($"[DI] Type {typeof(TImplementation)} already registered");
                 return;
             }
 
@@ -40,7 +42,7 @@ namespace Mobiray.DI
         {
             if (_singletons.ContainsKey(typeof(TInterface)))
             {
-                Debug.LogError($"[DI] Type {typeof(TInterface)} already registered");
+                if (ShowDebugLogs) Debug.LogError($"[DI] Type {typeof(TInterface)} already registered");
                 return;
             }
 
@@ -54,15 +56,15 @@ namespace Mobiray.DI
 
         internal object Resolve(Type type)
         {
-            // Если уже есть инстанс - возвращаем его
+            // If instance already exists - return it
             if (_singletons.TryGetValue(type, out var instance))
                 return instance;
 
-            // Ищем регистрацию
+            // Look for registration
             if (!_registrations.TryGetValue(type, out var implementationType))
                 throw new InvalidOperationException($"No registration found for {type}");
 
-            // Создаем инстанс с инжекцией зависимостей
+            // Create instance with dependency injection
             instance = CreateInstance(implementationType);
             _singletons[type] = instance;
 
@@ -71,13 +73,13 @@ namespace Mobiray.DI
 
         private object CreateInstance(Type type)
         {
-            // Пробуем найти конструктор с [Inject]
+            // Try to find constructor with [Inject]
             var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
             var injectConstructor = Array.Find(constructors, c => c.GetCustomAttribute<InjectAttribute>() != null);
 
             if (injectConstructor != null)
             {
-                // Инжект через конструктор
+                // Inject through constructor
                 var parameters = injectConstructor.GetParameters();
                 var args = new object[parameters.Length];
 
@@ -88,7 +90,7 @@ namespace Mobiray.DI
             }
             else
             {
-                // Обычный конструктор
+                // Regular constructor
                 return Activator.CreateInstance(type);
             }
         }
@@ -99,7 +101,7 @@ namespace Mobiray.DI
             {
                 var type = target.GetType();
 
-                // Ищем методы с [Inject]
+                // Look for methods with [Inject]
                 var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 var injected = false;
 
@@ -122,7 +124,7 @@ namespace Mobiray.DI
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"[DI] Failed to inject {target.GetType()}: {ex.Message}");
+                if (ShowDebugLogs) Debug.LogError($"[DI] Failed to inject {target.GetType()}: {ex.Message}");
                 return false;
             }
         }
