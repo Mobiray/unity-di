@@ -1,6 +1,6 @@
 # UnityDI - Minimal Dependency Injection Framework
 
-A lightweight DI framework for Unity that supports singleton services with constructor and method injection.
+A lightweight DI tool for Unity that supports singleton services with constructor and method injection.
 
 ## Installation
 
@@ -14,7 +14,7 @@ A lightweight DI framework for Unity that supports singleton services with const
 }
 ```
 
-2. Create subclass of GameInstaller and register dependencies
+2. Create a subclass of GameInstaller and register dependencies
 ```csharp
 public class MyInstaller : GameInstaller
 {

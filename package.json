@@ -3,17 +3,14 @@
   "displayName": "UnityDI",
   "version": "1.2.0",
   "unity": "6000.2",
-  "description": "A tiny dependency injection framework for Unity by Mobiray.",
+  "description": "A tiny dependency injection tool for Unity by Mobiray.",
+  "documentationUrl": "https://github.com/mobiray/unity-di",
+  "changelogUrl": "https://github.com/mobiray/unity-di/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/mobiray/unity-di/blob/main/LICENSE.md",
   "author": {
     "name": "Mobiray",
     "url": "https://github.com/mobiray"
   },
   "license": "MIT",
-  "dependencies": {},
-  "changelog": {
-    "1.2.0": "Added logging control settings",
-    "1.1.1": "Minor fixes",
-    "1.1.0": "Added injecting on scene change",
-    "1.0.0": "Initial release"
-  }
+  "dependencies": {}
 }
