@@ -1,7 +1,7 @@
 {
   "name": "com.mobiray.unity_di",
   "displayName": "UnityDI",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "unity": "6000.2",
   "description": "A tiny dependency injection tool for Unity by Mobiray.",
   "documentationUrl": "https://github.com/mobiray/unity-di",
