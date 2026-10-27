@@ -7,13 +7,20 @@ namespace Mobiray.DI
 {
     internal class DIContainer
     {
-        private static DIContainer _instance;
-        internal static DIContainer Instance => _instance ??= new DIContainer();
+        #region Fields
+
+        private readonly Dictionary<Type, object> _singletons = new();
+        private readonly Dictionary<Type, Type> _registrations = new();
+
+        #endregion
+
+        #region Properties
 
         internal bool ShowDebugLogs { get; set; } = true;
 
-        internal readonly Dictionary<Type, object> _singletons = new();
-        internal readonly Dictionary<Type, Type> _registrations = new();
+        #endregion
+
+        #region Registration
 
         internal void Register<TInterface, TImplementation>() where TImplementation : TInterface
         {
@@ -26,18 +33,6 @@ namespace Mobiray.DI
             _registrations[typeof(TInterface)] = typeof(TImplementation);
         }
 
-        internal void Register<TImplementation>()
-        {
-            if (_registrations.ContainsKey(typeof(TImplementation)))
-            {
-                if (ShowDebugLogs) Debug.LogError($"[DI] Type {typeof(TImplementation)} already registered");
-                return;
-            }
-
-            _registrations[typeof(TImplementation)] = typeof(TImplementation);
-        }
-
-
         internal void RegisterInstance<TInterface>(TInterface instance)
         {
             if (_singletons.ContainsKey(typeof(TInterface)))
@@ -49,10 +44,9 @@ namespace Mobiray.DI
             _singletons[typeof(TInterface)] = instance;
         }
 
-        internal T Resolve<T>()
-        {
-            return (T)Resolve(typeof(T));
-        }
+        #endregion
+
+        #region Resolving & Injection
 
         internal object Resolve(Type type)
         {
@@ -69,30 +63,6 @@ namespace Mobiray.DI
             _singletons[type] = instance;
 
             return instance;
-        }
-
-        private object CreateInstance(Type type)
-        {
-            // Try to find constructor with [Inject]
-            var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
-            var injectConstructor = Array.Find(constructors, c => c.GetCustomAttribute<InjectAttribute>() != null);
-
-            if (injectConstructor != null)
-            {
-                // Inject through constructor
-                var parameters = injectConstructor.GetParameters();
-                var args = new object[parameters.Length];
-
-                for (int i = 0; i < parameters.Length; i++)
-                    args[i] = Resolve(parameters[i].ParameterType);
-
-                return injectConstructor.Invoke(args);
-            }
-            else
-            {
-                // Regular constructor
-                return Activator.CreateInstance(type);
-            }
         }
 
         internal bool Inject(object target)
@@ -129,10 +99,34 @@ namespace Mobiray.DI
             }
         }
 
-        internal void Clear()
+        #endregion
+
+        #region Private Methods
+
+        private object CreateInstance(Type type)
         {
-            _singletons.Clear();
-            _registrations.Clear();
+            // Try to find constructor with [Inject]
+            var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            var injectConstructor = Array.Find(constructors, c => c.GetCustomAttribute<InjectAttribute>() != null);
+
+            if (injectConstructor != null)
+            {
+                // Inject through constructor
+                var parameters = injectConstructor.GetParameters();
+                var args = new object[parameters.Length];
+
+                for (int i = 0; i < parameters.Length; i++)
+                    args[i] = Resolve(parameters[i].ParameterType);
+
+                return injectConstructor.Invoke(args);
+            }
+            else
+            {
+                // Regular constructor
+                return Activator.CreateInstance(type);
+            }
         }
+
+        #endregion
     }
 }

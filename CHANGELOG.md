@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.2] - 2026-10-28
+### Removed
+- Removed `RegisterSingleton<T>()` from `GameInstaller`; use `Register<T, T>()` instead
+- Removed public manual injection methods (`InjectScene`, `InjectGameObject`, `InjectCurrentScene`) from `GameInstaller`
+- Removed the `Dont Destroy On Load` toggle from `GameInstaller`; the installer now always persists between scenes (disabling it broke injection in later scenes)
+- Removed unused internal code (`Resolve<T>`, `Clear`, static `DIContainer.Instance`)
+
+### Fixed
+- Corrected README usage examples and documented installer settings
+
 ## [1.2.1] - 2025-11-22
 ### Changed
 - Version bump

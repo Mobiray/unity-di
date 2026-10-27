@@ -6,12 +6,16 @@ namespace Mobiray.DI
     [DefaultExecutionOrder(-999)]
     public abstract class GameInstaller : MonoBehaviour
     {
-        [Header("Installer Settings")] [SerializeField]
-        protected bool _dontDestroyOnLoad = true;
+        #region Fields
 
-        [SerializeField] private bool _showDebugLogs = true;
+        [Header("Installer Settings")] [SerializeField]
+        private bool _showDebugLogs = true;
 
         private static bool _isInitialized;
+
+        #endregion
+
+        #region Unity Lifecycle
 
         protected virtual void Awake()
         {
@@ -34,38 +38,14 @@ namespace Mobiray.DI
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        private void Initialize()
-        {
-            if (_dontDestroyOnLoad)
-                DontDestroyOnLoad(gameObject);
+        #endregion
 
-            UnityDI.SetDebugLogs(_showDebugLogs);
-            RegisterDependencies();
-
-            _isInitialized = true;
-        }
+        #region Registration
 
         /// <summary>
         /// Override this method to register dependencies
         /// </summary>
         protected abstract void RegisterDependencies();
-
-        /// <summary>
-        /// Inject all objects in the current scene
-        /// </summary>
-        internal void InjectAll()
-        {
-            UnityDI.InjectAllInScene();
-        }
-
-        /// <summary>
-        /// Called when a new scene is loaded
-        /// </summary>
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if(_showDebugLogs) Debug.Log($"[GameInstaller] New scene loaded: {scene.name}, injecting dependencies...");
-            InjectAll();
-        }
 
         /// <summary>
         /// Register a singleton with an interface
@@ -76,14 +56,6 @@ namespace Mobiray.DI
         }
 
         /// <summary>
-        /// Register a singleton without an interface
-        /// </summary>
-        protected void RegisterSingleton<TImplementation>()
-        {
-            UnityDI.Register<TImplementation>();
-        }
-
-        /// <summary>
         /// Register a pre-created instance
         /// </summary>
         protected void RegisterInstance<TInterface>(TInterface instance)
@@ -91,28 +63,29 @@ namespace Mobiray.DI
             UnityDI.RegisterInstance(instance);
         }
 
-        /// <summary>
-        /// Manual injection for a specific scene
-        /// </summary>
-        public void InjectScene(Scene scene)
+        #endregion
+
+        #region Private Methods
+
+        private void Initialize()
         {
-            UnityDI.InjectScene(scene);
+            DontDestroyOnLoad(gameObject);
+
+            UnityDI.SetDebugLogs(_showDebugLogs);
+            RegisterDependencies();
+
+            _isInitialized = true;
         }
 
         /// <summary>
-        /// Manual injection for a specific GameObject
+        /// Called when a new scene is loaded
         /// </summary>
-        public void InjectGameObject(GameObject gameObject)
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            UnityDI.InjectGameObject(gameObject);
+            if(_showDebugLogs) Debug.Log($"[GameInstaller] New scene loaded: {scene.name}, injecting dependencies...");
+            UnityDI.InjectAllInScene();
         }
 
-        /// <summary>
-        /// Manual injection for the current scene
-        /// </summary>
-        public void InjectCurrentScene()
-        {
-            InjectAll();
-        }
+        #endregion
     }
 }
