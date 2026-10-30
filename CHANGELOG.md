@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2026-10-30
+### Changed
+- `GameInstaller` alone now handles early injection: place it on every scene and the duplicate injects its scene in `Awake` before destroying itself
+### Removed
+- Removed `SceneLoadDetector`; no longer needed
+
 ## [1.2.3] - 2026-10-30
 ### Fixed
 - Restored injection before `Awake`/`OnEnable` (regression since 1.2.0): the installer now injects its own scene during its `Awake`, and the restored `SceneLoadDetector` component injects any other scene before its objects run `Awake`

@@ -76,6 +76,6 @@ public class SomeService : ISomeService
 
 ## Notes
 
-- The installer's own scene is injected during the installer's `Awake` (execution order -999), so dependencies are available in `Awake`/`OnEnable` of that scene. For scenes loaded later, add a `SceneLoadDetector` component (execution order -1000) to the scene to inject it before any `Awake`/`OnEnable`; without it, the scene is injected on load, after `Awake`/`OnEnable` and before `Start`. Don't add the detector to the installer's scene.
+- Put your `GameInstaller` subclass on every scene. The first one registers dependencies and persists between scenes; on later scenes the duplicate injects its scene during its `Awake` (execution order -999), so dependencies are available in `Awake`/`OnEnable`, and then destroys itself. A scene without an installer is injected on load, after `Awake`/`OnEnable` and before `Start`.
 - Only the active scene is injected on load. Additively loaded scenes and objects instantiated at runtime are not injected automatically.
 - Objects moved to `DontDestroyOnLoad` are not in the active scene, so they are not injected on later scene loads.

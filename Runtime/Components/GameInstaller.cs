@@ -21,6 +21,8 @@ namespace Mobiray.DI
         {
             if (_isInitialized)
             {
+                // Duplicate installer in a later scene: inject this scene before other Awake/OnEnable, then self-destroy
+                UnityDI.InjectScene(gameObject.scene);
                 Destroy(gameObject);
                 return;
             }
