@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.1] - 2026-10-30
+### Fixed
+- Static state (installer flag and DI container) is reset on Play Mode start, so entering Play Mode with Domain Reload disabled no longer breaks registration
+
 ## [1.3.0] - 2026-10-30
 ### Changed
 - `GameInstaller` alone now handles early injection: place it on every scene and the duplicate injects its scene in `Awake` before destroying itself

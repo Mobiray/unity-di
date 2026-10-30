@@ -17,6 +17,12 @@ namespace Mobiray.DI
 
         #endregion
 
+        #region Lifecycle
+
+        internal static void Reset() => _container = null;
+
+        #endregion
+
         #region Settings
 
         internal static void SetDebugLogs(bool showLogs) => Container.ShowDebugLogs = showLogs;

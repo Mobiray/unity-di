@@ -17,6 +17,14 @@ namespace Mobiray.DI
 
         #region Unity Lifecycle
 
+        // Statics survive Play Mode restarts when Domain Reload is disabled
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            _isInitialized = false;
+            UnityDI.Reset();
+        }
+
         protected virtual void Awake()
         {
             if (_isInitialized)
