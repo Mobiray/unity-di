@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Mobiray.DI
@@ -11,6 +12,7 @@ namespace Mobiray.DI
 
         private readonly Dictionary<Type, object> _singletons = new();
         private readonly Dictionary<Type, Type> _registrations = new();
+        private readonly ConditionalWeakTable<object, object> _injected = new();
 
         #endregion
 
@@ -67,6 +69,10 @@ namespace Mobiray.DI
 
         internal bool Inject(object target)
         {
+            // Skip already injected targets (scene may be injected early and again on sceneLoaded)
+            if (_injected.TryGetValue(target, out _))
+                return false;
+
             try
             {
                 var type = target.GetType();
@@ -89,6 +95,9 @@ namespace Mobiray.DI
                     method.Invoke(target, args);
                     injected = true;
                 }
+
+                if (injected)
+                    _injected.Add(target, null);
 
                 return injected;
             }

@@ -40,7 +40,7 @@ public class MyInstaller : GameInstaller
 
    > If you press Play from a scene that is not the first one, that scene needs an installer too. Extra installers in later scenes are harmless: they destroy themselves on startup.
 
-3. Mark a method on a MonoBehaviour with `[Inject]`. It is called with the resolved dependencies each time the scene containing that MonoBehaviour is loaded:
+3. Mark a method on a MonoBehaviour with `[Inject]`. It is called with the resolved dependencies once per object, when the scene containing that MonoBehaviour is injected:
 
 ```csharp
 public class Player : MonoBehaviour
@@ -76,6 +76,6 @@ public class SomeService : ISomeService
 
 ## Notes
 
-- Injection happens when a scene finishes loading, after `Awake`/`OnEnable` and before `Start`. Use injected dependencies in `Start` or later, not in `Awake`.
+- The installer's own scene is injected during the installer's `Awake` (execution order -999), so dependencies are available in `Awake`/`OnEnable` of that scene. For scenes loaded later, add a `SceneLoadDetector` component (execution order -1000) to the scene to inject it before any `Awake`/`OnEnable`; without it, the scene is injected on load, after `Awake`/`OnEnable` and before `Start`. Don't add the detector to the installer's scene.
 - Only the active scene is injected on load. Additively loaded scenes and objects instantiated at runtime are not injected automatically.
 - Objects moved to `DontDestroyOnLoad` are not in the active scene, so they are not injected on later scene loads.

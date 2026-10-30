@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.3] - 2026-10-30
+### Fixed
+- Restored injection before `Awake`/`OnEnable` (regression since 1.2.0): the installer now injects its own scene during its `Awake`, and the restored `SceneLoadDetector` component injects any other scene before its objects run `Awake`
+- An object is no longer injected twice when a scene is injected early and again on scene load
+
 ## [1.2.2] - 2026-10-28
 ### Removed
 - Removed `RegisterSingleton<T>()` from `GameInstaller`; use `Register<T, T>()` instead

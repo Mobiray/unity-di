@@ -69,10 +69,13 @@ namespace Mobiray.DI
 
         private void Initialize()
         {
-            DontDestroyOnLoad(gameObject);
-
             UnityDI.SetDebugLogs(_showDebugLogs);
             RegisterDependencies();
+
+            // Inject the installer's own scene before other components run Awake/OnEnable
+            UnityDI.InjectScene(gameObject.scene);
+
+            DontDestroyOnLoad(gameObject);
 
             _isInitialized = true;
         }
